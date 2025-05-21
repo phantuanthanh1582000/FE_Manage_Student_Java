@@ -1,54 +1,39 @@
-import React from 'react';
-import { Layout, Menu, Avatar, Dropdown } from 'antd';
-import {
-  UserOutlined,
-  DashboardOutlined,
-  LogoutOutlined,
-  TeamOutlined,
-} from '@ant-design/icons';
+import React, { useState } from 'react';
+import { Layout, Menu } from 'antd';
+import { useAuth } from '../../global/AuthenticationContext';
+import { useNavigate, useLocation, Outlet } from 'react-router-dom';
+
+import { adminRoutes } from '../../routers/Routes';
 
 const { Header, Sider, Content } = Layout;
 
-const AdminLayout = ({ children }) => {
-  // Menu dropdown cho avatar (header)
-  const dropdownMenuItems = [
-    {
-      key: 'logout',
-      label: 'Đăng xuất',
-      icon: <LogoutOutlined />,
-      onClick: () => {
-        // Xử lý logout ở đây
-        console.log('Logout clicked');
-      },
-    },
-  ];
+const AdminLayout = () => {
+  const { onLogout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [collapsed, setCollapsed] = useState(false);
 
-  // Menu sider
-  const siderMenuItems = [
-    {
-      key: '1',
-      icon: <DashboardOutlined />,
-      label: 'Dashboard',
-    },
-    {
-      key: '2',
-      icon: <TeamOutlined />,
-      label: 'Quản lý sinh viên',
-    },
-    {
-      key: '3',
-      icon: <LogoutOutlined />,
-      label: 'Đăng xuất',
-      onClick: () => {
-        // Xử lý logout ở đây
-        console.log('Logout clicked');
-      },
-    },
-  ];
+  const pathToKeyMap = adminRoutes.reduce((acc, route) => {
+    if (route.path) acc[route.path] = route.key;
+    return acc;
+  }, {});
+
+  const selectedKey = pathToKeyMap[location.pathname] ?? 'dashboard';
+
+  // Xử lý click menu sider
+  const onMenuClick = ({ key }) => {
+    if (key === 'logout') {
+      onLogout();
+    } else {
+      const route = adminRoutes.find(r => r.key === key);
+      if (route && route.path) {
+        navigate(route.path);
+      }
+    }
+  };
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      {/* Header nằm trên cùng, cố định */}
       <Header
         style={{
           background: '#fff',
@@ -66,17 +51,10 @@ const AdminLayout = ({ children }) => {
         <div style={{ fontSize: 18, fontWeight: 'bold' }}>
           🎓 Hệ thống quản trị sinh viên
         </div>
-
-        <Dropdown menu={{ items: dropdownMenuItems }} placement="bottomRight" trigger={['click']}>
-          <div style={{ cursor: 'pointer' }}>
-            <Avatar icon={<UserOutlined />} />
-          </div>
-        </Dropdown>
       </Header>
 
-      {/* Layout chính, cách header 64px */}
       <Layout style={{ marginTop: 64 }}>
-        <Sider collapsible>
+        <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
           <div
             className="logo"
             style={{
@@ -85,21 +63,25 @@ const AdminLayout = ({ children }) => {
               fontSize: '20px',
               fontWeight: 'bold',
               textAlign: 'center',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}
           >
-            Admin Panel
+            {!collapsed ? 'Admin Panel' : 'A'}
           </div>
 
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={['1']}
-            items={siderMenuItems}
+            selectedKeys={[selectedKey]}
+            items={adminRoutes}
+            onClick={onMenuClick}
           />
         </Sider>
 
         <Content>
-          {children}
+          <Outlet />
         </Content>
       </Layout>
     </Layout>

@@ -1,13 +1,41 @@
 import React from 'react';
-import AdminLayout from '../src/components/layouts/AdminLayout';
-import StudentPage from '../src/components/pages/StudentPage';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-function App() {
+import AdminLayout from '../src/components/layouts/AdminLayout';
+import DashboardPage from '../src/components/pages/DashboardPage';
+import DepartmentPage from '../src/components/pages/DepartmentPage';
+import Login from '../src/components/pages/LoginPage';
+import PrivateRoute from '../src/routers/PrivateRoute';
+import { useAuth } from '../src/global/AuthenticationContext';
+
+const App = () => {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <AdminLayout>
-      <StudentPage />
-    </AdminLayout>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <AdminLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<DashboardPage />} />
+          <Route path="department" element={<DepartmentPage />} />
+        </Route>
+
+  
+        <Route
+          path="*"
+          element={<Navigate to={isAuthenticated ? "/" : "/login"} replace />}
+        />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
