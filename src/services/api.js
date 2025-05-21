@@ -15,3 +15,17 @@ export const getAllDepartment = () => {
 export const getMajorById = (id) => {
   return axios.get(`/api/majors/${id}`);
 };
+
+export const addDepartment = (props) => {
+    const urlBackend = "/api/departments";
+    return axios.post(urlBackend, props);
+};
+
+export const updateDepartment = (id, props) => {
+  const urlBackend = `/api/departments/${id}`;
+  return axios.put(urlBackend, props);
+};
+
+export const deleteDepartment = (id) => {
+  return axios.delete(`/api/departments/${id}`);
+};
