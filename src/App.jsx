@@ -27,13 +27,12 @@ const App = () => {
         >
           <Route index element={<DashboardPage />} />
           <Route path="department" element={<DepartmentPage />} />
-          <Route path="major" element={<MajorPage />} />s
+          <Route path="major" element={<MajorPage />} />
         </Route>
 
-  
         <Route
           path="*"
-          element={<Navigate to={isAuthenticated ? "/" : "/login"} replace />}
+          element={<Navigate to={isAuthenticated ? '/' : '/login'} replace />}
         />
       </Routes>
     </Router>

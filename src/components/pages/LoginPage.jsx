@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, Button, notification, Card, Row, Col, Typography } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { login } from '../../services/api';
 import { useAuth } from '../../global/AuthenticationContext';
 
@@ -8,7 +8,21 @@ const { Title } = Typography;
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { onLogin } = useAuth();
+
+  // Lấy thông báo lỗi từ state nếu có
+  const errorMessage = location.state?.errorMessage;
+
+  useEffect(() => {
+    if (errorMessage) {
+      notification.error({
+        message: 'Lỗi',
+        description: errorMessage,
+        duration: 5,
+      });
+    }
+  }, [errorMessage]);
 
   const onFinish = async (values) => {
     try {
@@ -17,6 +31,11 @@ const Login = () => {
         onLogin(res.data);
         notification.success({ message: 'Đăng nhập thành công' });
         navigate('/');
+      } else {
+        notification.error({
+          message: 'Đăng nhập thất bại',
+          description: res.message || 'Thông tin đăng nhập không chính xác',
+        });
       }
     } catch (error) {
       notification.error({
@@ -30,7 +49,7 @@ const Login = () => {
     <div
       style={{
         height: '100vh',
-        backgroundImage: 'url("../../../src/assets/background_login.jpg")', 
+        backgroundImage: 'url("../../../src/assets/background_login.jpg")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
