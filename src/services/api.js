@@ -29,3 +29,8 @@ export const updateDepartment = (id, props) => {
 export const deleteDepartment = (id) => {
   return axios.delete(`/api/departments/${id}`);
 };
+
+export const addMajor = (id, props) => {
+  const urlBackend = `/api/majors/departments/${id}`;
+  return axios.post(urlBackend, props);
+};
