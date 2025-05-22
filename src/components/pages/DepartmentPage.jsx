@@ -9,10 +9,18 @@ import {
   Modal,
   Form,
   Input,
-  notification 
+  notification,
+  Radio
 } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { getAllDepartment, getMajorById, addDepartment, updateDepartment, deleteDepartment } from '../../services/api';
+import {
+  getAllDepartment,
+  getMajorById,
+  addDepartment,
+  updateDepartment,
+  deleteDepartment,
+  addMajor // ➕ API thêm ngành
+} from '../../services/api';
 import dayjs from 'dayjs';
 
 const { confirm } = Modal;
@@ -25,9 +33,12 @@ const DepartmentPage = () => {
   const [pageSize, setPageSize] = useState(5);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isMajorModalVisible, setIsMajorModalVisible] = useState(false); // ➕ Modal ngành
   const [form] = Form.useForm();
+  const [majorForm] = Form.useForm(); // ➕ Form ngành
 
   const [editingDepartment, setEditingDepartment] = useState(null);
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState(null);
 
   const fetchMajorNames = async (departments) => {
     const allMajorIds = [...new Set(departments.flatMap((dep) => dep.majorIds))];
@@ -105,8 +116,7 @@ const DepartmentPage = () => {
               placement: 'topRight',
               duration: 3,
             });
-            setDepartments((prev) => prev.filter((dep) => dep.id !== department.id));
-            fetchDepartments()
+            fetchDepartments();
           } else {
             notification.error({
               message: 'Lỗi',
@@ -124,50 +134,51 @@ const DepartmentPage = () => {
           });
         }
       },
-      onCancel() {
-      },
     });
   };
 
   const columns = [
     {
+      title: '',
+      key: 'radio',
+      render: (_, record) => (
+        <Radio
+          checked={selectedDepartmentId === record.id}
+          onChange={() => setSelectedDepartmentId(record.id)}
+        />
+      ),
+      width: 50,
+    },
+    {
       title: 'STT',
-      dataIndex: 'stt',
-      key: 'stt',
-      render: (text, record, index) => (currentPage - 1) * pageSize + index + 1,
+      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
     },
     {
       title: 'Tên Khoa',
       dataIndex: 'name',
-      key: 'name',
     },
     {
       title: 'Mã Khoa',
       dataIndex: 'departmentCode',
-      key: 'departmentCode',
     },
     {
       title: 'Ngành học',
       dataIndex: 'majorIds',
-      key: 'majorIds',
       render: renderMajorDropdown,
     },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
-      key: 'createdAt',
       render: (date) => dayjs(date).format('DD/MM/YYYY HH:mm'),
     },
     {
       title: 'Trạng thái',
       dataIndex: 'deleted',
-      key: 'deleted',
       render: (deleted) =>
         deleted ? <Tag color="red">Đã xóa</Tag> : <Tag color="green">Hoạt động</Tag>,
     },
     {
       title: 'Hành động',
-      key: 'action',
       render: (_, record) => (
         <Space>
           <Button type="link" onClick={() => onEditDepartment(record)}>
@@ -215,13 +226,8 @@ const DepartmentPage = () => {
             placement: 'topRight',
             duration: 3,
           });
-
-          setDepartments((prev) =>
-            prev.map((dep) => (dep.id === editingDepartment.id ? res.data : dep))
-          );
-          setIsModalVisible(false);
-          setEditingDepartment(null);
-          form.resetFields();
+          fetchDepartments();
+          handleCancel();
         } else {
           notification.error({
             message: 'Lỗi',
@@ -239,9 +245,8 @@ const DepartmentPage = () => {
             placement: 'topRight',
             duration: 3,
           });
-          setDepartments((prev) => [res.data, ...prev]);
-          setIsModalVisible(false);
-          form.resetFields();
+          fetchDepartments();
+          handleCancel();
         } else {
           notification.error({
             message: 'Lỗi',
@@ -252,7 +257,6 @@ const DepartmentPage = () => {
         }
       }
     } catch (errorInfo) {
-      console.log('Validate Failed:', errorInfo);
       notification.error({
         message: 'Lỗi',
         description: errorInfo.message || 'Vui lòng kiểm tra lại thông tin nhập.',
@@ -262,14 +266,59 @@ const DepartmentPage = () => {
     }
   };
 
+  const handleAddMajor = () => {
+    if (!selectedDepartmentId) {
+      return message.warning('Vui lòng chọn một khoa trước khi thêm ngành!');
+    }
+    majorForm.resetFields();
+    setIsMajorModalVisible(true);
+  };
+
+  const handleCancelMajor = () => {
+    setIsMajorModalVisible(false);
+    majorForm.resetFields();
+  };
+
+  const handleSaveMajor = async () => {
+    try {
+      const values = await majorForm.validateFields();
+      console.log(values)
+      const res = await addMajor(selectedDepartmentId, values);
+      if (res.code === 1) {
+        notification.success({
+          message: 'Thành công',
+          description: res.message || `Ngành "${values.name}" đã được thêm.`,
+        });
+        fetchDepartments();
+        handleCancelMajor();
+      } else {
+        notification.error({
+          message: 'Lỗi',
+          description: res.message || 'Không thể thêm ngành.',
+        });
+      }
+    } catch (err) {
+      notification.error({
+        message: 'Lỗi',
+        description: 'Vui lòng điền đầy đủ thông tin ngành!',
+      });
+    }
+  };
+
   return (
     <div style={{ padding: 24 }}>
       <h2>Danh sách Khoa</h2>
 
-      <Button type="primary" style={{ marginBottom: 16 }} onClick={showModal}>
-        + Thêm Khoa
-      </Button>
+      <Space style={{ marginBottom: 16 }}>
+        <Button type="primary" onClick={showModal}>
+          + Thêm Khoa
+        </Button>
+        <Button type="primary" onClick={handleAddMajor}>
+          + Thêm Ngành
+        </Button>
+      </Space>
 
+      {/* Modal thêm/sửa Khoa */}
       <Modal
         title={editingDepartment ? 'Chỉnh sửa Khoa' : 'Thêm Khoa mới'}
         open={isModalVisible}
@@ -278,20 +327,30 @@ const DepartmentPage = () => {
         okText={editingDepartment ? 'Lưu' : 'Thêm'}
         cancelText="Huỷ"
       >
-        <Form form={form} layout="vertical" name="form_in_modal">
-          <Form.Item
-            name="name"
-            label="Tên Khoa"
-            rules={[{ required: true, message: 'Vui lòng nhập tên khoa!' }]}
-          >
+        <Form form={form} layout="vertical">
+          <Form.Item name="name" label="Tên Khoa" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
+          <Form.Item name="departmentCode" label="Mã Khoa" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
 
-          <Form.Item
-            name="departmentCode"
-            label="Mã Khoa"
-            rules={[{ required: true, message: 'Vui lòng nhập mã khoa!' }]}
-          >
+      {/* Modal thêm Ngành */}
+      <Modal
+        title="Thêm Ngành học mới"
+        open={isMajorModalVisible}
+        onOk={handleSaveMajor}
+        onCancel={handleCancelMajor}
+        okText="Thêm"
+        cancelText="Hủy"
+      >
+        <Form form={majorForm} layout="vertical">
+          <Form.Item name="name" label="Tên Ngành" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="majorCode" label="Mã Ngành" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
         </Form>
@@ -305,7 +364,7 @@ const DepartmentPage = () => {
         bordered
         pagination={{
           current: currentPage,
-          pageSize: pageSize,
+          pageSize,
           onChange: (page, size) => {
             setCurrentPage(page);
             setPageSize(size);
