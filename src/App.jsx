@@ -9,6 +9,7 @@ import PrivateRoute from '../src/routers/PrivateRoute';
 import { useAuth } from '../src/global/AuthenticationContext';
 import MajorPage from './components/pages/MajorPage';
 import Dashboard from './components/pages/Dashboard';
+import SubjectPage from './components/pages/SubjectPage';
 
 const App = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -30,6 +31,7 @@ const App = () => {
           <Route index element={<Dashboard />} />
           <Route path="department" element={<DepartmentPage />} />
           <Route path="major" element={<MajorPage />} />
+          <Route path="subject" element={<SubjectPage />} />
         </Route>
         <Route
           path="*"

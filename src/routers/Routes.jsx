@@ -26,6 +26,12 @@ export const adminRoutes = [
     icon: <TeamOutlined />,
   },
   {
+    key: 'subject',
+    path: '/subject',
+    label: 'Quản lý môn học',
+    icon: <BookOutlined />,
+  },
+  {
     key: 'logout',
     label: 'Đăng xuất',
     icon: <LogoutOutlined />,

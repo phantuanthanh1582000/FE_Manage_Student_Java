@@ -62,3 +62,13 @@ export const updateClass = (classId, majorId, props) => {
 export const deleteMajor = (majorId) => {
   return axios.delete(`/api/majors/${majorId}`);
 };
+
+export const getAllSubjects = () => {
+  const urlBackend = `/api/subjects`;
+  return axios.get(urlBackend);
+};
+
+export const addSubject = (id, props) => {
+  const urlBackend = `/api/subjects/majors/${id}`;
+  return axios.post(urlBackend, props);
+};
