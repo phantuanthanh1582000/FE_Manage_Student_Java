@@ -5,17 +5,18 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // ✅ THÊM loading
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     const userInfo = localStorage.getItem('user_info');
+
     if (token && userInfo) {
       setIsAuthenticated(true);
       setUser(JSON.parse(userInfo));
-    } else {
-      setIsAuthenticated(false);
-      setUser(null);
     }
+
+    setLoading(false); // ✅ Đảm bảo kết thúc loading
   }, []);
 
   const onLogin = (data) => {
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, onLogin, onLogout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, loading, onLogin, onLogout }}>
       {children}
     </AuthContext.Provider>
   );

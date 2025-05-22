@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../global/AuthenticationContext';
-import { notification } from 'antd';
+import { notification, Spin } from 'antd';
 
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, loading } = useAuth();
   const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated && (!user || user.role.toLowerCase() !== 'admin')) {
+    if (!loading && isAuthenticated && user?.role.toLowerCase() !== 'admin') {
       notification.error({
         message: 'Truy cập bị từ chối',
         description: 'Bạn không có quyền truy cập vào trang này.',
@@ -16,13 +16,17 @@ const PrivateRoute = ({ children }) => {
       });
       setRedirect(true);
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, loading]);
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 100 }}>
+        <Spin size="large" />
+      </div>
+    );
   }
 
-  if (redirect) {
+  if (!isAuthenticated || redirect) {
     return <Navigate to="/login" replace />;
   }
 

@@ -3,13 +3,14 @@ import {
   TeamOutlined,
   LogoutOutlined,
   ApartmentOutlined,
+  BookOutlined
 } from '@ant-design/icons';
 
 export const adminRoutes = [
   {
     key: 'dashboard',
     path: '/',
-    label: 'Dashboard',
+    label: 'dashboard',
     icon: <DashboardOutlined />,
   },
   {
