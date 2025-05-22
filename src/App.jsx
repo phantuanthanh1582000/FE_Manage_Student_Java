@@ -7,6 +7,7 @@ import DepartmentPage from '../src/components/pages/DepartmentPage';
 import Login from '../src/components/pages/LoginPage';
 import PrivateRoute from '../src/routers/PrivateRoute';
 import { useAuth } from '../src/global/AuthenticationContext';
+import MajorPage from './components/pages/MajorPage';
 
 const App = () => {
   const { isAuthenticated } = useAuth();
@@ -26,6 +27,7 @@ const App = () => {
         >
           <Route index element={<DashboardPage />} />
           <Route path="department" element={<DepartmentPage />} />
+          <Route path="major" element={<MajorPage />} />s
         </Route>
 
   
