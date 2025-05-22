@@ -3,13 +3,14 @@ import {
   TeamOutlined,
   LogoutOutlined,
   ApartmentOutlined,
+  BookOutlined
 } from '@ant-design/icons';
 
 export const adminRoutes = [
   {
     key: 'dashboard',
     path: '/',
-    label: 'Dashboard',
+    label: 'dashboard',
     icon: <DashboardOutlined />,
   },
   {
@@ -23,6 +24,12 @@ export const adminRoutes = [
     path: '/major',
     label: 'Quản lý ngành học',
     icon: <TeamOutlined />,
+  },
+  {
+    key: 'subject',
+    path: '/subject',
+    label: 'Quản lý môn học',
+    icon: <BookOutlined />,
   },
   {
     key: 'logout',
