@@ -19,7 +19,7 @@ import {
   addDepartment,
   updateDepartment,
   deleteDepartment,
-  addMajor // ➕ API thêm ngành
+  addMajor 
 } from '../../services/api';
 import dayjs from 'dayjs';
 
