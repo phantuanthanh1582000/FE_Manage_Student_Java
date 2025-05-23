@@ -72,3 +72,47 @@ export const addSubject = (id, props) => {
   const urlBackend = `/api/subjects/majors/${id}`;
   return axios.post(urlBackend, props);
 };
+
+export const getAllRoom = () => {
+  const urlBackend = `/api/rooms`;
+  return axios.get(urlBackend);
+};
+
+export const getAllTeacher = () => {
+  const urlBackend = `/api/users/teachers`;
+  return axios.get(urlBackend);
+};
+
+export const addRoom = (props) => {
+  const urlBackend = `/api/rooms`;
+  return axios.post(urlBackend, props);
+};
+
+export const getAllSchedule = () => {
+  const urlBackend = `/api/schedules`;
+  return axios.get(urlBackend);
+};
+
+export const getAllClasses = () => {
+  const urlBackend = `/api/classes`;
+  return axios.get(urlBackend);
+};
+
+export const getSubjectById = (id) => {
+  return axios.get(`/api/subjects/${id}`);
+};
+
+export const getUserById = (id) => {
+  return axios.get(`/api/users/${id}`);
+};
+
+export const getRoomById = (id) => {
+  return axios.get(`/api/rooms/${id}`);
+};
+
+export const addSchedule = (props) => {
+  const urlBackend = `/api/schedules`;
+  return axios.post(urlBackend, props);
+};
+
+

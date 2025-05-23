@@ -3,7 +3,9 @@ import {
   TeamOutlined,
   LogoutOutlined,
   ApartmentOutlined,
-  BookOutlined
+  BookOutlined,
+  AppstoreOutlined,
+  ScheduleOutlined
 } from '@ant-design/icons';
 
 export const adminRoutes = [
@@ -30,6 +32,18 @@ export const adminRoutes = [
     path: '/subject',
     label: 'Quản lý môn học',
     icon: <BookOutlined />,
+  },
+  {
+    key: 'room',
+    path: '/room',
+    label: 'Quản lý phòng học',
+    icon: <AppstoreOutlined />,
+  },
+  {
+    key: 'schedule',
+    path: '/schedule',
+    label: 'Quản lý lịch học',
+    icon: <AppstoreOutlined />,
   },
   {
     key: 'logout',

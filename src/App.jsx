@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import AdminLayout from '../src/components/layouts/AdminLayout';
-// import SubjectPage from './components/pages/Dashboard';
 import DepartmentPage from '../src/components/pages/DepartmentPage';
 import Login from '../src/components/pages/LoginPage';
 import PrivateRoute from '../src/routers/PrivateRoute';
@@ -10,6 +9,8 @@ import { useAuth } from '../src/global/AuthenticationContext';
 import MajorPage from './components/pages/MajorPage';
 import Dashboard from './components/pages/Dashboard';
 import SubjectPage from './components/pages/SubjectPage';
+import RoomPage from './components/pages/RoomPage';
+import SchedulePage from './components/pages/SchedulePage';
 
 const App = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -32,6 +33,8 @@ const App = () => {
           <Route path="department" element={<DepartmentPage />} />
           <Route path="major" element={<MajorPage />} />
           <Route path="subject" element={<SubjectPage />} />
+          <Route path="room" element={<RoomPage />} />
+          <Route path="schedule" element={<SchedulePage />} />
         </Route>
         <Route
           path="*"
