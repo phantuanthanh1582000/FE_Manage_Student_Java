@@ -62,7 +62,6 @@ export const updateClass = (classId, majorId, props) => {
 export const deleteMajor = (majorId) => {
   return axios.delete(`/api/majors/${majorId}`);
 };
-
 export const getAllSubjects = () => {
   const urlBackend = `/api/subjects`;
   return axios.get(urlBackend);
@@ -72,3 +71,18 @@ export const addSubject = (id, props) => {
   const urlBackend = `/api/subjects/majors/${id}`;
   return axios.post(urlBackend, props);
 };
+export const getLessonByDate = (date) => {
+  const urlBackend = `/api/lessons/by-date?date=${date}`;
+  return axios.get(urlBackend);
+}
+
+export const getAttendanceStudent = (lessonId) => {
+  const urlBackend = `/api/attendance/attendance-list/${lessonId}`;
+  return axios.get(urlBackend);
+}
+
+export const updateStatusAttendance = (props) => {
+  const urlBackend = `/api/attendance/update-status`;
+  return axios.post(urlBackend, props);
+}
+

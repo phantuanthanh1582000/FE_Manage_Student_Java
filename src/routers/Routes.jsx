@@ -32,6 +32,12 @@ export const adminRoutes = [
     icon: <BookOutlined />,
   },
   {
+    key: 'lesson',
+    path: '/lesson',
+    label: 'Lịch học',
+    icon: <TeamOutlined />,
+  },
+  {
     key: 'logout',
     label: 'Đăng xuất',
     icon: <LogoutOutlined />,
