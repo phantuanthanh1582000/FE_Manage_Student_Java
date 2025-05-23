@@ -10,7 +10,7 @@ import MajorPage from './components/pages/MajorPage';
 import Dashboard from './components/pages/Dashboard';
 import SubjectPage from './components/pages/SubjectPage';
 import RoomPage from './components/pages/RoomPage';
-import SchedulePage from './components/pages/SchedulePage';
+import SchedulePage from '../src/components/pages/Schedule/view/SchedulePage';
 
 const App = () => {
   const { isAuthenticated, loading } = useAuth();

@@ -8,13 +8,16 @@ const PrivateRoute = ({ children }) => {
   const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
-    if (!loading && isAuthenticated && user?.role.toLowerCase() !== 'admin') {
-      notification.error({
-        message: 'Truy cập bị từ chối',
-        description: 'Bạn không có quyền truy cập vào trang này.',
-        duration: 3,
-      });
-      setRedirect(true);
+    if (!loading && isAuthenticated) {
+      const allowedRoles = ['admin', 'teacher'];
+      if (!allowedRoles.includes(user?.role?.toLowerCase())) {
+        notification.error({
+          message: 'Truy cập bị từ chối',
+          description: 'Bạn không có quyền truy cập vào trang này.',
+          duration: 3,
+        });
+        setRedirect(true);
+      }
     }
   }, [isAuthenticated, user, loading]);
 

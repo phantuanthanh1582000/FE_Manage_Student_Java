@@ -115,4 +115,21 @@ export const addSchedule = (props) => {
   return axios.post(urlBackend, props);
 };
 
+export const getLessons = (props) => {
+  const urlBackend = `/api/lessons`;
+  return axios.get(urlBackend, props);
+};
+
+export const getAttendance= (id) => {
+  return axios.get(`/api/attendance/attendance-list/${id}`);
+};
+
+export const addLessons = (props) => {
+  const urlBackend = `/api/lessons/generate`;
+  return axios.post(urlBackend, props);
+};
+
+export const addAttendance = (id) => {
+  return axios.post(`/api/attendance/generate-by-schedule/${id}`);
+};
 

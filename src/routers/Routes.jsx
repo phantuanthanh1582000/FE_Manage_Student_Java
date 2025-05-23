@@ -43,7 +43,21 @@ export const adminRoutes = [
     key: 'schedule',
     path: '/schedule',
     label: 'Quản lý lịch học',
-    icon: <AppstoreOutlined />,
+    icon: <ScheduleOutlined />,
+  },
+  {
+    key: 'logout',
+    label: 'Đăng xuất',
+    icon: <LogoutOutlined />,
+  },
+];
+
+export const teacherRoutes = [
+  {
+    key: 'dashboard',
+    path: '/',
+    label: 'Dashboard',
+    icon: <DashboardOutlined />,
   },
   {
     key: 'logout',
