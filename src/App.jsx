@@ -10,6 +10,8 @@ import { useAuth } from '../src/global/AuthenticationContext';
 import MajorPage from './components/pages/MajorPage';
 import Dashboard from './components/pages/Dashboard';
 import SubjectPage from './components/pages/SubjectPage';
+import LessonPage from './components/pages/teacher/LessonPage';
+
 
 const App = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -32,6 +34,8 @@ const App = () => {
           <Route path="department" element={<DepartmentPage />} />
           <Route path="major" element={<MajorPage />} />
           <Route path="subject" element={<SubjectPage />} />
+          <Route path="lesson" element={<LessonPage />} />
+
         </Route>
         <Route
           path="*"
