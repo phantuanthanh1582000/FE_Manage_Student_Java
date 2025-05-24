@@ -60,6 +60,12 @@ export const teacherRoutes = [
     icon: <DashboardOutlined />,
   },
   {
+    key: 'lesson',
+    path: '/lesson',
+    label: 'Lịch học',
+    icon: <TeamOutlined />,
+  },
+  {
     key: 'logout',
     label: 'Đăng xuất',
     icon: <LogoutOutlined />,

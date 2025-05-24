@@ -11,6 +11,8 @@ import Dashboard from './components/pages/Dashboard';
 import SubjectPage from './components/pages/SubjectPage';
 import RoomPage from './components/pages/RoomPage';
 import SchedulePage from '../src/components/pages/Schedule/view/SchedulePage';
+import LessonPage from './components/pages/teacher/LessonPage';
+
 
 const App = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -35,6 +37,8 @@ const App = () => {
           <Route path="subject" element={<SubjectPage />} />
           <Route path="room" element={<RoomPage />} />
           <Route path="schedule" element={<SchedulePage />} />
+          <Route path="lesson" element={<LessonPage />} />
+
         </Route>
         <Route
           path="*"
