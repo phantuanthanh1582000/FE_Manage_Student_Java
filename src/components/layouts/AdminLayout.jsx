@@ -3,30 +3,35 @@ import { Layout, Menu } from 'antd';
 import { useAuth } from '../../global/AuthenticationContext';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 
-import { adminRoutes } from '../../routers/Routes';
+import { adminRoutes, teacherRoutes } from '../../routers/Routes';
 
 const { Header, Sider, Content } = Layout;
 
 const AdminLayout = () => {
-  const { onLogout } = useAuth();
+  const { onLogout, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
 
-  const pathToKeyMap = adminRoutes.reduce((acc, route) => {
+  // Lấy routes theo role
+  const roleRoutes = user?.role === 'teacher' ? teacherRoutes : adminRoutes;
+
+  // Map path => key
+  const pathToKeyMap = roleRoutes.reduce((acc, route) => {
     if (route.path) acc[route.path] = route.key;
     return acc;
   }, {});
 
+  // Xác định menu đang được chọn dựa vào URL
   const selectedKey = pathToKeyMap[location.pathname] ?? 'dashboard';
 
-  // Xử lý click menu sider
+  // Xử lý khi click vào menu
   const onMenuClick = ({ key }) => {
     if (key === 'logout') {
       onLogout();
     } else {
-      const route = adminRoutes.find(r => r.key === key);
-      if (route && route.path) {
+      const route = roleRoutes.find(r => r.key === key);
+      if (route?.path) {
         navigate(route.path);
       }
     }
@@ -68,14 +73,14 @@ const AdminLayout = () => {
               textOverflow: 'ellipsis',
             }}
           >
-            {!collapsed ? 'Admin Panel' : 'A'}
+            {!collapsed ? (user?.role === 'teacher' ? 'Teacher Panel' : 'Admin Panel') : 'A'}
           </div>
 
           <Menu
             theme="dark"
             mode="inline"
             selectedKeys={[selectedKey]}
-            items={adminRoutes}
+            items={roleRoutes}
             onClick={onMenuClick}
           />
         </Sider>
